@@ -6,6 +6,7 @@
 	
 	var camera, renderer, scene;
 	var ballJSON, ballModel, bowlingBall;
+  var cube, cube2, cube3;
 	var pinJSON, bowlingPin;
 	var loader;
 	
@@ -99,68 +100,72 @@
 			
 			scene.add(plane);						// add plane to scene
 
-			// bowling ball
+      addObjects();
 			
-			// material
-			var ballMaterial = new THREE.MeshStandardMaterial(
-				{
-					color : 0x93de,
-					emissive : 0x0,
-					roughness : 0.5,
-					metalness : 0.38,
-					shading : THREE.SmoothShading,
-					vertexColors : THREE.NoColors
-				}
-			);
-			
-			bowlingBall = new Physijs.SphereMesh(
-				// SphereGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength)
-				new THREE.SphereGeometry( 0.68, 100, 100 ),
-				ballMaterial
-			);
-			
-			bowlingBall.position.set(2, 0, 0);		// set ball xyz position
-			bowlingBall.castShadow = true;        // enable shadows on ball
-			bowlingBall.receiveShadow = true;
-			
-			scene.add( bowlingBall );
-      
-      // boxes
-      
-      // material
-      var boxMaterial = new THREE.MeshStandardMaterial( 
-        {
-          color : 0x00ff00,
-					emissive : 0x0,
-					roughness : 0.5,
-					metalness : 0.38,
-					shading : THREE.SmoothShading,
-					vertexColors : THREE.NoColors
-        }
-      );
-                                                         
-      cube = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
-      cube2 = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
-      cube3 = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
-      
-      cube.position.set(1, 0, -5);
-			cube.castShadow = true;
-			cube.receiveShadow = true;
-      
-      cube2.position.set(2, 0, -8);
-			cube2.castShadow = true;
-			cube2.receiveShadow = true;
-      
-      cube3.position.set(3, 0, -7);
-			cube3.castShadow = true;
-			cube3.receiveShadow = true;
-			
-			scene.add(cube);
-			scene.add(cube2);
-			scene.add(cube3);
-
 		}
 	}
+  
+  function addObjects() {
+    // bowling ball
+			
+    // material
+    var ballMaterial = new THREE.MeshStandardMaterial(
+      {
+        color : 0x93de,
+        emissive : 0x0,
+        roughness : 0.5,
+        metalness : 0.38,
+        shading : THREE.SmoothShading,
+        vertexColors : THREE.NoColors
+      }
+    );
+
+    bowlingBall = new Physijs.SphereMesh(
+      // SphereGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength)
+      new THREE.SphereGeometry( 0.68, 100, 100 ),
+      ballMaterial
+    );
+
+    bowlingBall.position.set(2, 0, 0);		// set ball xyz position
+    bowlingBall.castShadow = true;        // enable shadows on ball
+    bowlingBall.receiveShadow = true;
+
+    scene.add( bowlingBall );
+
+    // boxes
+
+    // material
+    var boxMaterial = new THREE.MeshStandardMaterial( 
+      {
+        color : 0x00ff00,
+        emissive : 0x0,
+        roughness : 0.5,
+        metalness : 0.38,
+        shading : THREE.SmoothShading,
+        vertexColors : THREE.NoColors
+      }
+    );
+
+    cube = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
+    cube2 = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
+    cube3 = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
+
+    cube.position.set(1, 0, -5);
+    cube.castShadow = true;
+    cube.receiveShadow = true;
+
+    cube2.position.set(2, 0, -8);
+    cube2.castShadow = true;
+    cube2.receiveShadow = true;
+
+    cube3.position.set(3, 0, -7);
+    cube3.castShadow = true;
+    cube3.receiveShadow = true;
+
+    scene.add(cube);
+    scene.add(cube2);
+    scene.add(cube3);
+  }
 	
 	function launchBall() {
 		var force = new THREE.Vector3(0, 0, -100);
@@ -201,7 +206,14 @@
 	});
   
   document.getElementById("reset").addEventListener("click", function() {
-		// Reset here
+		// remove all objects
+    scene.remove(cube);
+    scene.remove(cube2);
+    scene.remove(cube3);
+    scene.remove(bowlingBall);
+    
+    // add new objects
+    addObjects();
 	});
 	
 })();
