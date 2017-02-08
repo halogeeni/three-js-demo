@@ -1,10 +1,17 @@
 (function() {
+	
+	Physijs.scripts.worker = './js/physijs_worker.js';
+	// somehow using the full path for ammo.js doesn't work - this does
+    Physijs.scripts.ammo = 'ammo.js';
+	
 	var camera, renderer, scene;
 	var ballJSON, ballModel, bowlingBall;
 	var pinJSON, bowlingPin;
 	var loader;
 	
 	function init() {
+		/* OBSOLETE - Loading JSON models + applying physics to them is too experimental atm.
+		
 		// load JSON models
 		$.when(
 			$.getJSON('models/bowlingBall.json', function(data){
@@ -15,8 +22,14 @@
 			})
 		).then( setupScene );		// start scene setup after successful model loading
 		
+		*/
+		
+		setupScene();
+		
 		function setupScene() {
+			
 			// *** basic scene setup ***
+			
 			// renderer
 			renderer = new THREE.WebGLRenderer( { antialias : true } );		// create renderer, enable antialiasing
 			renderer.setSize( window.innerWidth, window.innerHeight );
@@ -24,7 +37,7 @@
 			document.body.appendChild( renderer.domElement );				// append canvas element to body
 
 			// scene
-			scene = new THREE.Scene();							// create new Three.js scene
+			scene = new Physijs.Scene();						// create new Three.js scene
 			scene.fog = new THREE.Fog( 0xcce0ff, 0, 500 );		// a bit o' fog
 			
 			// camera
@@ -85,8 +98,11 @@
 				map: planeTexture
 			});
 			
-			var planeGeometry = new THREE.PlaneGeometry(500, 500);			// create plane geometry
-			var plane = new THREE.Mesh(planeGeometry, planeMaterial);		// create the plane mesh using geometry & material
+			// create plane geometry
+			var planeGeometry = new THREE.PlaneGeometry(500, 500);		
+
+			// create the plane mesh using geometry & material
+			var plane = new Physijs.BoxMesh(planeGeometry, planeMaterial);
 			
 			plane.receiveShadow = true;				// this does not seem to work yet? no shadows are cast to the plane
 			plane.rotation.x = -Math.PI / 2;		// rotate plane
@@ -94,8 +110,34 @@
 			
 			scene.add(plane);						// add plane to scene
 
-			
 			// bowling ball
+			
+			// define ball material
+			var ballMaterial = new THREE.MeshStandardMaterial(
+				{
+					color : 0x93de,
+					emissive : 0x0,
+					roughness : 0.5,
+					metalness : 0.38,
+					shading : THREE.SmoothShading,
+					vertexColors : THREE.NoColors
+				}
+			);
+			
+			bowlingBall = new Physijs.SphereMesh(
+				// SphereGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength)
+				new THREE.SphereGeometry( 0.68, 100, 100 ),
+				ballMaterial
+			);
+			
+			bowlingBall.position.set(2, 0, 0);		// set ball xyz position
+			// enable shadows on ball
+			bowlingBall.castShadow = true;
+			bowlingBall.receiveShadow = true;
+			
+			scene.add( bowlingBall );
+
+			/* OBSOLETE.
 			
 			bowlingBall = loader.parse(ballJSON);		// use loader to parse JSON model to Object3D-object
 			
@@ -118,7 +160,7 @@
 					child.material = ballMaterial;
 				}
 			});
-			
+	
 			bowlingBall.position.set(2, 0, 0);		// set ball xyz position
 			// enable shadows on ball
 			bowlingBall.castShadow = true;
@@ -135,13 +177,19 @@
 			bowlingPin.receiveShadow = true;
 			// add pin to scene
 			scene.add(bowlingPin);
+			
+			*/
+			
 		}
 	}
 	
 	var render = function () {
-		requestAnimationFrame( render );
-		
 		// check for undefined variables to suppress errors while initializing
+		if(scene) {
+			scene.simulate();		// run physics
+		}
+		
+		/*
 		if(bowlingBall) {
 			bowlingBall.rotation.x += 0.01;
 			bowlingBall.rotation.y += 0.01;
@@ -152,10 +200,13 @@
 			bowlingPin.rotation.y += 0.01;
 			bowlingPin.rotation.z += 0.01;
 		}
+		*/
 		
 		if(renderer) {
-			renderer.render(scene, camera);
+			renderer.render(scene, camera);		// render the scene
 		}
+		
+		requestAnimationFrame( render );
 	};
 	
 	// window resize handler function
