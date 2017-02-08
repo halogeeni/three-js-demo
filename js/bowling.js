@@ -2,7 +2,7 @@
 	
 	Physijs.scripts.worker = './js/physijs_worker.js';
 	// somehow using the full path for ammo.js doesn't work - this does
-    Physijs.scripts.ammo = 'ammo.js';
+  Physijs.scripts.ammo = 'ammo.js';
 	
 	var camera, renderer, scene;
 	var ballJSON, ballModel, bowlingBall;
@@ -10,20 +10,7 @@
 	var loader;
 	
 	function init() {
-		/* OBSOLETE - Loading JSON models + applying physics to them is too experimental atm.
-		
-		// load JSON models
-		$.when(
-			$.getJSON('models/bowlingBall.json', function(data){
-				ballJSON = data;
-			}),
-			$.getJSON('models/bowlingPin.json', function(data){
-				pinJSON = data;
-			})
-		).then( setupScene );		// start scene setup after successful model loading
-		
-		*/
-		
+
 		setupScene();
 		
 		function setupScene() {
@@ -82,6 +69,7 @@
 			var planeTexture = new THREE.TextureLoader().load(
 				'./textures/bw_checkered.jpg'
 			);
+      
 			// setup repeated texture wrapping
 			planeTexture.wrapS = THREE.RepeatWrapping;
 			planeTexture.wrapT = THREE.RepeatWrapping;
@@ -89,13 +77,15 @@
 			planeTexture.anisotropy = renderer.getMaxAnisotropy(); // setup texture anisotropy
 			
 			// define plane material
-			var planeMaterial = new THREE.MeshPhongMaterial({
-				color: 0x222222,
-				specular: 0xffffff,
-				shininess: 20,
-				shading: THREE.FlatShading,
-				map: planeTexture
-			});
+			var planeMaterial = new THREE.MeshPhongMaterial(
+        {
+          color: 0x222222,
+          specular: 0xffffff,
+          shininess: 20,
+          shading: THREE.FlatShading,
+          map: planeTexture
+        }
+      );
 			
 			// create plane geometry
 			var planeGeometry = new THREE.PlaneGeometry(500, 500);		
@@ -111,7 +101,7 @@
 
 			// bowling ball
 			
-			// define ball material
+			// material
 			var ballMaterial = new THREE.MeshStandardMaterial(
 				{
 					color : 0x93de,
@@ -130,55 +120,45 @@
 			);
 			
 			bowlingBall.position.set(2, 0, 0);		// set ball xyz position
-			// enable shadows on ball
-			bowlingBall.castShadow = true;
+			bowlingBall.castShadow = true;        // enable shadows on ball
 			bowlingBall.receiveShadow = true;
 			
 			scene.add( bowlingBall );
-
-			/* OBSOLETE.
-			
-			bowlingBall = loader.parse(ballJSON);		// use loader to parse JSON model to Object3D-object
-			
-			// define ball material
-			var ballMaterial = new THREE.MeshStandardMaterial(
-				{
-					color : 0x93de,
+      
+      // boxes
+      
+      // material
+      var boxMaterial = new THREE.MeshStandardMaterial( 
+        {
+          color : 0x00ff00,
 					emissive : 0x0,
 					roughness : 0.5,
 					metalness : 0.38,
 					shading : THREE.SmoothShading,
 					vertexColors : THREE.NoColors
-				}
-			);
+        }
+      );
+                                                         
+      cube = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
+      cube2 = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
+      cube3 = new Physijs.SphereMesh(new THREE.BoxGeometry( 0.5, 1, 0.5 ), boxMaterial);
+      
+      cube.position.set(1, 0, -5);
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+      
+      cube2.position.set(2, 0, -8);
+			cube2.castShadow = true;
+			cube2.receiveShadow = true;
+      
+      cube3.position.set(3, 0, -7);
+			cube3.castShadow = true;
+			cube3.receiveShadow = true;
 			
-			// Object3D is composed of meshes
-			// --> material must be added to all its children vertices
-			bowlingBall.traverse(function ( child ) {
-				if ( child instanceof THREE.Mesh ) {
-					child.material = ballMaterial;
-				}
-			});
-	
-			bowlingBall.position.set(2, 0, 0);		// set ball xyz position
-			// enable shadows on ball
-			bowlingBall.castShadow = true;
-			bowlingBall.receiveShadow = true;
-			// add ball to scene
-			scene.add(bowlingBall);
-			
-			// bowling pin
-			
-			bowlingPin = loader.parse(pinJSON);		// use loader to parse JSON model to Object3D-object
-			bowlingPin.position.set(-3, 0, 0);		// set pin xyz position
-			// enable shadows on pin
-			bowlingPin.castShadow = true;
-			bowlingPin.receiveShadow = true;
-			// add pin to scene
-			scene.add(bowlingPin);
-			
-			*/
-			
+			scene.add(cube);
+			scene.add(cube2);
+			scene.add(cube3);
+
 		}
 	}
 	
@@ -192,19 +172,6 @@
 		if(scene) {
 			scene.simulate();		// run physics
 		}
-		
-		/*
-		if(bowlingBall) {
-			bowlingBall.rotation.x += 0.01;
-			bowlingBall.rotation.y += 0.01;
-		}
-		
-		if(bowlingPin) {
-			bowlingPin.rotation.x += 0.01;
-			bowlingPin.rotation.y += 0.01;
-			bowlingPin.rotation.z += 0.01;
-		}
-		*/
 		
 		if(renderer) {
 			renderer.render(scene, camera);		// render the scene
