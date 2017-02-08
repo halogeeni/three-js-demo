@@ -199,5 +199,9 @@
 	document.getElementById("launchBallButton").addEventListener("click", function() {
 		launchBall();
 	});
+  
+  document.getElementById("reset").addEventListener("click", function() {
+		// Reset here
+	});
 	
 })();
