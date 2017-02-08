@@ -28,7 +28,7 @@
 		
 		function setupScene() {
 			
-			// *** basic scene setup ***
+			/* basic scene setup */
 			
 			// renderer
 			renderer = new THREE.WebGLRenderer( { antialias : true } );		// create renderer, enable antialiasing
@@ -45,7 +45,7 @@
 			camera.position.z = 5;		// set camera z axis position
 	
 	
-			// *** lights ***
+			/* lights */
 			
 			// ambient
 			var ambientLight = new THREE.AmbientLight( 0x000000 );		// create new ambient light (="sun")
@@ -71,8 +71,7 @@
 				scene.add(lights[i]);
 			}
 
-			
-			// *** objects ***
+			/* objects */
 			
 			// instantiate object loader for JSON models
 			var loader = new THREE.ObjectLoader();
@@ -183,6 +182,11 @@
 		}
 	}
 	
+	function launchBall() {
+		var force = new THREE.Vector3(0, 10, -100);
+		bowlingBall.applyCentralImpulse(force);
+	}
+	
 	var render = function () {
 		// check for undefined variables to suppress errors while initializing
 		if(scene) {
@@ -219,6 +223,14 @@
 	init();
 	render();
 	
+	/* event listeners */
+	
+	// window resize
 	window.addEventListener( 'resize', onWindowResize, false );
+	
+	// button click
+	document.getElementById("launchBallButton").addEventListener("click", function() {
+		launchBall();
+	});
 	
 })();
