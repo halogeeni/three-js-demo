@@ -24,23 +24,19 @@
       camera.position.x = -1; // set camera z axis position
       camera.position.z = 3; // set camera z axis position
       camera.lookAt(new THREE.Vector3( 1, 0, 0 ));
+      
       // renderer
+      
+      // create renderer, enable antialiasing
       renderer = new THREE.WebGLRenderer({
         antialias: true
-      }); // create renderer, enable antialiasing
+      });
+      
       renderer.setSize(window.innerWidth, window.innerHeight);
       // shadows
       renderer.shadowMap.enabled = true;
       renderer.shadowMap.type = THREE.PCFSoftShadowMap; // enable softer shadows
-      /*
-      renderer.shadowMapBias = 0.0039;
-      renderer.shadowMapDarkness = 0.5;
-      renderer.shadowMapWidth = 1024;
-      renderer.shadowMapHeight = 1024;
-      renderer.shadowCameraNear = 100;
-      renderer.shadowCameraFar = 500;
-      renderer.shadowCameraFov = 75;
-      */
+ 
       document.body.appendChild(renderer.domElement); // append canvas element to body
 
       // scene
@@ -165,7 +161,6 @@
 
     // boxes
 
-    // using an array if we want to do something with the boxes later on
     boxes = [];
     
     // material
