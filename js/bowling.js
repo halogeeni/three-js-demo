@@ -105,8 +105,8 @@
 		}
 	}
   
-  function addObjects() {
-    // bowling ball
+  function addBall() {
+     // bowling ball
 			
     // material
     var ballMaterial = new THREE.MeshStandardMaterial(
@@ -131,6 +131,15 @@
     bowlingBall.receiveShadow = true;
 
     scene.add( bowlingBall );
+  }
+  
+  function resetBall() {
+    scene.remove(bowlingBall);
+    addBall();
+  }
+  
+  function addObjects() {
+    addBall();
 
     // boxes
 
@@ -214,6 +223,10 @@
     
     // add new objects
     addObjects();
+	});
+  
+  document.getElementById("resetBall").addEventListener("click", function() {
+		resetBall();
 	});
 	
 })();
