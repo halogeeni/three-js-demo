@@ -163,7 +163,7 @@
 	}
 	
 	function launchBall() {
-		var force = new THREE.Vector3(0, 10, -100);
+		var force = new THREE.Vector3(0, 0, -100);
 		bowlingBall.applyCentralImpulse(force);
 	}
 	
