@@ -9,7 +9,8 @@
   var boxes;
   var pinJSON, bowlingPin;
   var movingLight;
-  var loader;
+  var objectLoader, textureLoader;
+  var sky;
 
   function init() {
 
@@ -42,7 +43,7 @@
       // scene
       scene = new Physijs.Scene(); // create new Three.js scene
       scene.fog = new THREE.Fog(0xcce0ff, 0, 500); // a bit o' fog
-
+      
       /* lights */
 
       // ambient
@@ -84,12 +85,17 @@
       /* objects */
 
       // instantiate object loader for JSON models
-      var loader = new THREE.ObjectLoader();
+      objectLoader = new THREE.ObjectLoader();
+      // instantiate texture loader
+      textureLoader = new THREE.TextureLoader();
 
+      // skydome
+      createSkydome();
+      
       // plane
 
       // load plane texture from file
-      var planeTexture = new THREE.TextureLoader().load(
+      var planeTexture = textureLoader.load(
         './textures/bw_checkered.jpg'
       );
 
@@ -123,6 +129,23 @@
       addObjects();
 
     }
+  }
+  
+  function createSkydome(loader) {
+    // create geometry
+    var skyGeo = new THREE.SphereGeometry(1000, 32, 15);
+    // load texture
+    var texture = textureLoader.load( './textures/space.jpg' );
+    // create material
+    var material = new THREE.MeshPhongMaterial({
+      map: texture,
+    });
+    // create the mesh
+    sky = new THREE.Mesh(skyGeo, material);
+    // set mesh material to appear on the inside of the sphere
+    sky.material.side = THREE.BackSide;
+    // add skydome to scene
+    scene.add(sky);
   }
 
   function addBall() {
@@ -159,8 +182,7 @@
   function addObjects() {
     addBall();
 
-    // boxes
-
+    // init box mesh array
     boxes = [];
     
     // material
@@ -209,8 +231,9 @@
       movingLight.position.y = Math.abs(Math.cos(timer * 5) * 400);
       movingLight.position.z = -200 + Math.cos(timer * 3) * 100;
     }
-
+    
     requestAnimationFrame(render);
+    
   };
 
   // window resize handler function
