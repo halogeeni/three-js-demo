@@ -22,9 +22,10 @@
 
       // camera
       camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-      camera.position.x = -1; // set camera z axis position
-      camera.position.z = 3; // set camera z axis position
-      camera.lookAt(new THREE.Vector3( 1, 0, 0 ));
+      camera.position.x = -2; // set camera z axis position
+      camera.position.y = 5; // set camera y axis position
+      camera.position.z = 4; // set camera z axis position
+      camera.lookAt(new THREE.Vector3( 4, -2, -10 ));
       
       // renderer
       
@@ -59,9 +60,9 @@
       lights[2] = new THREE.PointLight(0xffffff, 1, 0);
 
       // set light xyz positions
-      lights[0].position.set(0, 30, 30);
-      lights[1].position.set(40, 50, -20);
-      lights[2].position.set(-30, 60, -10);
+      lights[0].position.set(-20, 40, 30);
+      lights[1].position.set(-40, 50, 20);
+      lights[2].position.set(-30, 60, 10);
 
       // enable shadows for all lights 
       for (var i = 0; i < lights.length; i++) {
