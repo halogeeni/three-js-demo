@@ -97,14 +97,26 @@
 
       // load plane texture from file
       var planeTexture = textureLoader.load(
-        './textures/bw_checkered.jpg'
+        './textures/stone.jpg'
       );
-
+      
       // setup repeated texture wrapping
       planeTexture.wrapS = THREE.RepeatWrapping;
       planeTexture.wrapT = THREE.RepeatWrapping;
       planeTexture.repeat = new THREE.Vector2(50, 50);
       planeTexture.anisotropy = renderer.getMaxAnisotropy(); // setup texture anisotropy
+      
+      var planeBumpMap = textureLoader.load(
+        './textures/stone-bump.jpg'
+      );
+      
+      // setup identical repeated bump map wrapping
+      planeBumpMap.wrapS = THREE.RepeatWrapping;
+      planeBumpMap.wrapT = THREE.RepeatWrapping;
+      planeBumpMap.repeat = new THREE.Vector2(50, 50);
+      //planeTexture.anisotropy = renderer.getMaxAnisotropy(); // setup texture anisotropy
+
+      
 
       // define plane material
       var planeMaterial = new THREE.MeshPhongMaterial({
@@ -112,7 +124,9 @@
         specular: 0xffffff,
         shininess: 20,
         shading: THREE.FlatShading,
-        map: planeTexture
+        map: planeTexture,
+        bumpMap: planeBumpMap,
+        bumpScale: 0.007
       });
 
       // create plane geometry
