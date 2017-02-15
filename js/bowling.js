@@ -130,7 +130,8 @@
             shading: THREE.FlatShading,
             map: planeTexture,
             bumpMap: planeBumpMap,
-            bumpScale: 0.01
+            bumpScale: 0.01,
+            name: "Ground"
          });
 
          // create plane geometry
@@ -190,9 +191,8 @@
       bowlingBall.castShadow = true; // enable shadows on ball
       bowlingBall.receiveShadow = true;
 
-      // TODO: does not trigger?
       bowlingBall.addEventListener('collision', function(other_object, relative_velocity, relative_rotation, contact_normal) {
-         console.log("Ball has collided with %s with an impact speed of %f", other_object, relative_velocity);
+         console.log("Ball has collided with %s", other_object.material.name);
       });
 
       scene.add(bowlingBall);
@@ -210,19 +210,22 @@
       // init box mesh array
       boxes = [];
 
-      // textures
+      // texture
       var boxTexture = textureLoader.load('./textures/wood.jpg');
-
-      // material
-      var boxMaterial = new THREE.MeshStandardMaterial({
-         roughness: 0.9,
-         metalness: 0.0,
-         map: boxTexture
-      });
 
       var z = -5;
 
       for (var i = 0; i < 15; i++) {
+         var name = "Pin " + i;
+        
+         // material
+         var boxMaterial = new THREE.MeshStandardMaterial({
+            roughness: 0.9,
+            metalness: 0.0,
+            map: boxTexture,
+            name: name
+         });
+         
          boxes[i] = new Physijs.SphereMesh(new THREE.BoxGeometry(0.5, 1, 0.5), boxMaterial);
          var x = Math.floor((Math.random() * 3) + 1);
          boxes[i].position.set(x, 0, z);
