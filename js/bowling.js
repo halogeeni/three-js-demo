@@ -61,7 +61,7 @@
 
       // set light xyz positions
       lights[0].position.set(-20, 40, 30);
-      lights[1].position.set(-40, 50, 20);
+      lights[1].position.set(-20, 80, -500);
       lights[2].position.set(-30, 60, 10);
 
       // enable shadows for all lights 
@@ -103,7 +103,7 @@
       // setup repeated texture wrapping
       planeTexture.wrapS = THREE.RepeatWrapping;
       planeTexture.wrapT = THREE.RepeatWrapping;
-      planeTexture.repeat = new THREE.Vector2(50, 50);
+      planeTexture.repeat = new THREE.Vector2(4, 50);
       planeTexture.anisotropy = renderer.getMaxAnisotropy(); // setup texture anisotropy
       
       var planeBumpMap = textureLoader.load(
@@ -113,7 +113,7 @@
       // setup identical repeated bump map wrapping
       planeBumpMap.wrapS = THREE.RepeatWrapping;
       planeBumpMap.wrapT = THREE.RepeatWrapping;
-      planeBumpMap.repeat = new THREE.Vector2(50, 50);
+      planeBumpMap.repeat = new THREE.Vector2(4, 50);
 
       // define plane material
       var planeMaterial = new THREE.MeshPhongMaterial({
@@ -127,7 +127,7 @@
       });
 
       // create plane geometry
-      var planeGeometry = new THREE.PlaneGeometry(500, 500);
+      var planeGeometry = new THREE.PlaneGeometry(40, 500);
 
       // create the plane mesh using geometry & material
       var plane = new Physijs.BoxMesh(planeGeometry, planeMaterial);
