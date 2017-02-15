@@ -75,11 +75,11 @@
       }
 
       // cool demo-esque moving light just for kicks :D
-      movingLight = new THREE.PointLight(0xff0000, 1);
+      movingLight = new THREE.PointLight(0x356dfc, 1);
       movingLight.castShadow = true;
       movingLight.shadow.mapSize.width = 2048;  // default 512
       movingLight.shadow.mapSize.height = 2048; // default 512
-      movingLight.shadow.camera.near = 1;       // default 0.5
+      movingLight.shadow.camera.near = 2;       // default 0.5
       movingLight.shadow.camera.far = 700;      // default 500
       scene.add(movingLight);
 
@@ -154,7 +154,7 @@
 
     // material
     var ballMaterial = new THREE.MeshStandardMaterial({
-      color: 0x93de,
+      color: 0x919191,
       emissive: 0x0,
       roughness: 0.5,
       metalness: 0.38,
