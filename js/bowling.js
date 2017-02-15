@@ -55,14 +55,14 @@
 
       // create an array of pointlights (= "bare lightbulbs")
       var lights = [];
-      lights[0] = new THREE.PointLight(0xffffff, 1, 0); // parameters: (color, intensity, distance)
-      lights[1] = new THREE.PointLight(0xffffff, 1, 0);
+      lights[0] = new THREE.PointLight(0x05d954, 0.2, 0); // parameters: (color, intensity, distance)
+      lights[1] = new THREE.PointLight(0xc53db3, 1, 0);
       lights[2] = new THREE.PointLight(0xffffff, 1, 0);
 
       // set light xyz positions
-      lights[0].position.set(-20, 40, 30);
-      lights[1].position.set(-40, 50, 20);
-      lights[2].position.set(-30, 60, 10);
+      lights[0].position.set(10, 40, -100);
+      lights[1].position.set(10, 50, 20);
+      lights[2].position.set(-30, 60, 50);
 
       // enable shadows for all lights 
       for (var i = 0; i < lights.length; i++) {
@@ -123,7 +123,7 @@
         shading: THREE.FlatShading,
         map: planeTexture,
         bumpMap: planeBumpMap,
-        bumpScale: 0.007
+        bumpScale: 0.01
       });
 
       // create plane geometry
