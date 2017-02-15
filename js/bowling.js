@@ -75,7 +75,7 @@
       }
 
       // cool demo-esque moving light just for kicks :D
-      movingLight = new THREE.PointLight(0x356dfc, 1);
+      movingLight = new THREE.PointLight(0x356dfc, 0.75);
       movingLight.castShadow = true;
       movingLight.shadow.mapSize.width = 2048;  // default 512
       movingLight.shadow.mapSize.height = 2048; // default 512
@@ -114,15 +114,12 @@
       planeBumpMap.wrapS = THREE.RepeatWrapping;
       planeBumpMap.wrapT = THREE.RepeatWrapping;
       planeBumpMap.repeat = new THREE.Vector2(50, 50);
-      //planeTexture.anisotropy = renderer.getMaxAnisotropy(); // setup texture anisotropy
-
-      
 
       // define plane material
       var planeMaterial = new THREE.MeshPhongMaterial({
         color: 0x222222,
         specular: 0xffffff,
-        shininess: 20,
+        shininess: 30,
         shading: THREE.FlatShading,
         map: planeTexture,
         bumpMap: planeBumpMap,
