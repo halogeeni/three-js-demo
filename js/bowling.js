@@ -40,8 +40,9 @@
     document.body.appendChild(renderer.domElement);
 
     // scene
-    scene = new Physijs.Scene(); // create new Three.js scene
+    scene = new Physijs.Scene(); // create new physics-enabled scene
     scene.fog = new THREE.Fog(0xcce0ff, 0, 500); // a bit o' fog
+    scene.setGravity(new THREE.Vector3(0, -20, 0)); // gravity tweaking
 
     // instantiate object & texture loaders
     objectLoader = new THREE.ObjectLoader();
@@ -118,22 +119,30 @@
     planeBumpMap.repeat = new THREE.Vector2(4, 50);
 
     // define plane material
-    var planeMaterial = new THREE.MeshPhongMaterial({
-      color: 0x222222,
-      specular: 0xd3d3d3,
-      shininess: 30,
-      shading: THREE.FlatShading,
-      map: planeTexture,
-      bumpMap: planeBumpMap,
-      bumpScale: 0.01,
-      name: "Ground"
-    });
+    var planeMaterial = Physijs.createMaterial(
+      new THREE.MeshPhongMaterial({
+        color: 0x222222,
+        specular: 0xd3d3d3,
+        shininess: 30,
+        shading: THREE.FlatShading,
+        map: planeTexture,
+        bumpMap: planeBumpMap,
+        bumpScale: 0.01,
+        name: "Ground"
+      }),
+      0.9, // friction
+      0.2 // restitution
+    );
 
     // create plane geometry
     var planeGeometry = new THREE.PlaneGeometry(40, 500);
 
     // create the plane mesh using geometry & material
-    var plane = new Physijs.BoxMesh(planeGeometry, planeMaterial);
+    var plane = new Physijs.BoxMesh(
+      planeGeometry,
+      planeMaterial,
+      0 // zero mass means this is a static object
+    );
 
     plane.receiveShadow = true; // objects cast shadows on the plane
     plane.rotation.x = -Math.PI / 2; // rotate plane
@@ -166,22 +175,29 @@
     var ballTexture = textureLoader.load('./textures/bowlingball.png');
 
     // material
-    var ballMaterial = new THREE.MeshStandardMaterial({
-      roughness: 0.25,
-      metalness: 0.42,
-      map: ballTexture
-    });
+    var ballMaterial = Physijs.createMaterial(
+      new THREE.MeshStandardMaterial({
+        roughness: 0.25,
+        metalness: 0.42,
+        map: ballTexture
+      }),
+      0.3, // friction
+      0.3 // restitution
+    );
 
     bowlingBall = new Physijs.SphereMesh(
       // SphereGeometry(radius, widthSegments, heightSegments, phiStart, phiLength, thetaStart, thetaLength)
       new THREE.SphereGeometry(0.68, 100, 100),
-      ballMaterial
+      ballMaterial,
+      3 // mass
     );
 
-    bowlingBall.position.set(2, 0, 0); // set ball xyz position
-    bowlingBall.castShadow = true; // enable shadows on ball
+    // set ball xyz position
+    bowlingBall.position.set(2, 0, 0);
+    // enable shadows on ball
+    bowlingBall.castShadow = true;
     bowlingBall.receiveShadow = true;
-
+    // collision event logging
     bowlingBall.addEventListener('collision', function(other_object, relative_velocity, relative_rotation, contact_normal) {
       console.log("Ball has collided with %s", other_object.material.name);
     });
@@ -197,27 +213,33 @@
 
   function addObjects() {
     addBall();
-
     // init box mesh array
     boxes = [];
-
     // texture
     var boxTexture = textureLoader.load('./textures/wood.jpg');
-
+    // init z axis position
     var z = -5;
 
     for (var i = 0; i < 15; i++) {
       var name = "Pin " + i;
-
       // material
-      var boxMaterial = new THREE.MeshStandardMaterial({
-        roughness: 0.9,
-        metalness: 0.0,
-        map: boxTexture,
-        name: name
-      });
+      var boxMaterial = Physijs.createMaterial(
+        new THREE.MeshStandardMaterial({
+          roughness: 0.9,
+          metalness: 0.0,
+          map: boxTexture,
+          name: name
+        }),
+        0.3, // friction
+        0.6 // restitution
+      );
 
-      boxes[i] = new Physijs.SphereMesh(new THREE.BoxGeometry(0.5, 1, 0.5), boxMaterial);
+      boxes[i] = new Physijs.SphereMesh(
+        new THREE.BoxGeometry(0.5, 1, 0.5),
+        boxMaterial,
+        1 // mass
+      );
+
       var x = Math.floor((Math.random() * 3) + 1);
       boxes[i].position.set(x, 0, z);
       boxes[i].castShadow = true;
@@ -225,17 +247,15 @@
       scene.add(boxes[i]);
       z -= 2;
     }
-
   }
 
   function launchBall() {
-    var force = new THREE.Vector3(0, 0, -100);
+    var force = new THREE.Vector3(0, 0, -150);
     bowlingBall.applyCentralImpulse(force);
   }
 
   var render = function() {
     var timer = 0.0001 * Date.now();
-
     // check for undefined variables to suppress errors while initializing
     if (scene) {
       scene.simulate(); // run physics
@@ -254,7 +274,6 @@
 
     // advance to next frame
     requestAnimationFrame(render);
-
   };
 
   // window resize handler function
@@ -270,6 +289,7 @@
 
   init();
   render();
+
 
 
   /* event listeners */
